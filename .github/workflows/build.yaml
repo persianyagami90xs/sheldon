@@ -25,6 +25,26 @@ jobs:
     - name: Clippy
       run: cargo clippy --workspace -- -D warnings -D clippy::use-self -D clippy::items-after-statements -D clippy::if-not-else
 
+  coverage:
+    needs: lint
+
+    name: test (coverage)
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        profile: minimal
+        override: true
+
+    - name: Test
+      run: |
+        cargo install cargo-tarpaulin
+        cargo tarpaulin --locked
+
   test:
     needs: lint
 
